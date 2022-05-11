@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.project_android.Common.Common;
 import com.example.project_android.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,7 +56,11 @@ public class SignIn extends AppCompatActivity {
                             User user = snapshot.child(edtPhone.getText().toString()).getValue(User.class);
 
                             if (user.getPassword().equals(edtPassword.getText().toString())) {
-                                Toast.makeText(SignIn.this, "SignIn Success!", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(SignIn.this, "SignIn Success!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SignIn.this, Home.class);
+                                Common.currentUser=user;
+                                startActivity(intent);
+                                finish();
                             } else {
                                 Toast.makeText(SignIn.this, "SignIn Fail!", Toast.LENGTH_SHORT).show();
                             }
@@ -62,7 +68,6 @@ public class SignIn extends AppCompatActivity {
                             Toast.makeText(SignIn.this, "User not Exists!", Toast.LENGTH_SHORT).show();
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
