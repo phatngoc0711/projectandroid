@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_Android">
         <activity
+            android:name=".FoodList"
+            android:exported="false" />
+        <activity
             android:name=".Home"
             android:exported="true"
             android:label="@string/title_activity_home"
@@ -22,7 +25,6 @@
         <activity
             android:name=".SignIn"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
