@@ -5,6 +5,7 @@ public class Order {
     private String ProductName;
     private String Quantity;
     private String Price;
+
     private String Discount;
 
     public Order() {
@@ -16,7 +17,10 @@ public class Order {
         Quantity = quantity;
         Price = price;
         Discount = discount;
+
     }
+
+
 
     public String getProductId() {
         return ProductId;

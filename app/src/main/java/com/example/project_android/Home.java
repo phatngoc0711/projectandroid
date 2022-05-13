@@ -62,17 +62,10 @@ public class Home extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
-//        mAppBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-//                .setOpenableLayout(drawer)
-//                .build();
-
-//        NavigationView navigationView= (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
-
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
+//        NavigationView navigationView= (NavigationView) findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -82,7 +75,7 @@ public class Home extends AppCompatActivity
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
+        navigationView.setNavigationItemSelectedListener(this);
 
         //setNameforUser
         View headerView = navigationView.getHeaderView(0);
@@ -147,19 +140,21 @@ public class Home extends AppCompatActivity
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id= item.getItemId();
         if (id==R.id.nav_menu){
-
         } else if (id==R.id.nav_cart){
-
+            Intent intent = new Intent(Home.this, Cart.class);
+            startActivity(intent);
         } else if (id==R.id.nav_orders){
-
+            Intent intent = new Intent(Home.this, OrderStatus.class);
+            startActivity(intent);
         } else if (id==R.id.nav_logOut){
-
+            Intent intent = new Intent(Home.this, SignIn.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawer(GravityCompat.START);
