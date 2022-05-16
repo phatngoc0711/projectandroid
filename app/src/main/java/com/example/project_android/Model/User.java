@@ -4,6 +4,15 @@ public class User {
     private String Name;
     private String Password;
     private String Phone;
+    private Boolean IsStaff;
+
+    public Boolean getIsStaff() {
+        return IsStaff;
+    }
+
+    public void setIsStaff(Boolean isStaff) {
+        IsStaff = isStaff;
+    }
 
     public String getPhone() {
         return Phone;
@@ -22,11 +31,10 @@ public class User {
     {
         Name=name;
         Password=password;
+        IsStaff = false;
     }
 
     public User(){}
-
-
 
     public String getName() {
         return Name;
