@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import io.paperdb.Paper;
+
 public class Home extends AppCompatActivity
                 implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -55,6 +57,7 @@ public class Home extends AppCompatActivity
         //initFireBase
         database= FirebaseDatabase.getInstance();
         cagatory=database.getReference("Category");
+        Paper.init(this);
 
         binding.appBarHome.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,6 +166,7 @@ public class Home extends AppCompatActivity
             Intent intent = new Intent(Home.this, OrderStatus.class);
             startActivity(intent);
         } else if (id==R.id.nav_logOut){
+            Paper.book().destroy();
             Intent intent = new Intent(Home.this, SignIn.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
