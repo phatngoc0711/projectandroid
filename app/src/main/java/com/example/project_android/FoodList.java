@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.project_android.Common.Common;
 import com.example.project_android.Interface.ItemClickListener;
 import com.example.project_android.Model.Food;
 import com.example.project_android.ViewHolder.FoodViewHolder;
@@ -54,7 +55,14 @@ public class FoodList extends AppCompatActivity {
         if (getIntent() != null) {
             CategoryId = getIntent().getStringExtra("CategoryId");
         }if (!CategoryId.isEmpty() && CategoryId != null) {
-            loadListFood(CategoryId);
+            if (Common.isConnectedToInternet(getBaseContext())) {
+                loadListFood(CategoryId);
+            }
+            else
+            {
+                Toast.makeText(FoodList.this, "Check Connection!!", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
         materialSearchBar = (MaterialSearchBar) findViewById(R.id.searchBar);

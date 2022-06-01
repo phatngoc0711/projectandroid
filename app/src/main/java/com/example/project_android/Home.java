@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -87,7 +88,16 @@ public class Home extends AppCompatActivity
         recycler_menu.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
-        loadMenu();
+        //Video 14
+        if (Common.isConnectedToInternet(this)) {
+            loadMenu();
+        }
+        else
+        {
+            Toast.makeText(this, "Check Connection!!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //Video 14
     }
 
     private void loadMenu() {
@@ -129,8 +139,9 @@ public class Home extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-
+        if (item.getItemId() == R.id.refresh){
+            loadMenu();
+        }
         return super.onOptionsItemSelected(item);
     }
 

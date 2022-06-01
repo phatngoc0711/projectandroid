@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.example.project_android.Common.Common;
 import com.example.project_android.Database.Database;
 import com.example.project_android.Model.Food;
 import com.example.project_android.Model.Order;
@@ -74,7 +75,14 @@ public class FoodDetail extends AppCompatActivity {
             food_Id = getIntent().getStringExtra("FoodId");
         }
         if (!food_Id.isEmpty()) {
-            getDetailFood(food_Id);
+            if (Common.isConnectedToInternet(getBaseContext())) {
+                getDetailFood(food_Id);
+            }
+            else
+            {
+                Toast.makeText(FoodDetail.this, "Check Connection!!", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
     }
