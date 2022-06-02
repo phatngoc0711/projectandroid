@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.project_android.Common.Common;
 import com.example.project_android.Interface.ItemClickListener;
@@ -42,6 +43,7 @@ public class FoodList extends AppCompatActivity {
     FirebaseRecyclerAdapter<Food, FoodViewHolder> searchAdapter;
     List<String> suggestList = new ArrayList<>();
     MaterialSearchBar materialSearchBar;
+    SwipeRefreshLayout swipeRefreshLayout;
 
 //    @Override
 //    protected void attachBaseContext(Context newBase) {
@@ -60,22 +62,54 @@ public class FoodList extends AppCompatActivity {
         setContentView(R.layout.activity_food_list);
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("Food");
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark
+        );
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (getIntent() != null) {
+                    CategoryId = getIntent().getStringExtra("CategoryId");
+                }if (!CategoryId.isEmpty() && CategoryId != null) {
+                    if (Common.isConnectedToInternet(getBaseContext())) {
+                        loadListFood(CategoryId);
+                    }
+                    else
+                    {
+                        Toast.makeText(FoodList.this, "Check Connection!!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+            }
+        });
+
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if (getIntent() != null) {
+                    CategoryId = getIntent().getStringExtra("CategoryId");
+                }if (!CategoryId.isEmpty() && CategoryId != null) {
+                    if (Common.isConnectedToInternet(getBaseContext())) {
+                        loadListFood(CategoryId);
+                    }
+                    else
+                    {
+                        Toast.makeText(FoodList.this, "Check Connection!!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+            }
+        });
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_food);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        if (getIntent() != null) {
-            CategoryId = getIntent().getStringExtra("CategoryId");
-        }if (!CategoryId.isEmpty() && CategoryId != null) {
-            if (Common.isConnectedToInternet(getBaseContext())) {
-                loadListFood(CategoryId);
-            }
-            else
-            {
-                Toast.makeText(FoodList.this, "Check Connection!!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
+
 
         materialSearchBar = (MaterialSearchBar) findViewById(R.id.searchBar);
         materialSearchBar.setHint("Enter your food");
@@ -201,6 +235,6 @@ public class FoodList extends AppCompatActivity {
         };
         Log.d("TAG", "" +adapter.getItemCount());
         recyclerView.setAdapter(adapter);
-
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

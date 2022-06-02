@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +20,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.project_android.Common.Common;
 import com.example.project_android.Interface.ItemClickListener;
 import com.example.project_android.Model.Category;
@@ -48,13 +47,13 @@ public class Home extends AppCompatActivity
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomeBinding binding;
-
     FirebaseDatabase database;
     DatabaseReference cagatory;
     TextView txtFullName;
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
+    SwipeRefreshLayout swipeRefreshLayout;
 
 //    @Override
 //    protected void attachBaseContext(Context newBase) {
@@ -76,6 +75,39 @@ public class Home extends AppCompatActivity
         binding.appBarHome.toolbar.setTitle("Menu");
         setSupportActionBar(binding.appBarHome.toolbar);
 
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark
+                );
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Common.isConnectedToInternet(getBaseContext())) {
+                    loadMenu();
+                }
+                else
+                {
+                    Toast.makeText(getBaseContext(), "Check Connection!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if (Common.isConnectedToInternet(getBaseContext())) {
+                    loadMenu();
+                }
+                else
+                {
+                    Toast.makeText(getBaseContext(), "Check Connection!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
+
         //initFireBase
         database= FirebaseDatabase.getInstance();
         cagatory=database.getReference("Category");
@@ -91,7 +123,6 @@ public class Home extends AppCompatActivity
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 //        NavigationView navigationView= (NavigationView) findViewById(R.id.nav_view);
-
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -102,36 +133,17 @@ public class Home extends AppCompatActivity
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setNavigationItemSelectedListener(this);
-
         //setNameforUser
         View headerView = navigationView.getHeaderView(0);
         txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
         txtFullName.setText(Common.currentUser.getName());
 //        txtFullName.setText("123");
-
         recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
         recycler_menu.setHasFixedSize(true);
-
-
 //        layoutManager = new LinearLayoutManager(this);
 //        recycler_menu.setLayoutManager(layoutManager);
-
         recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
-
-
-
-        //Video 14
-        if (Common.isConnectedToInternet(this)) {
-            loadMenu();
-        }
-        else
-        {
-            Toast.makeText(this, "Check Connection!!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        //Video 14
     }
-
     private void loadMenu() {
         adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class, R.layout.menu_item, MenuViewHolder.class,cagatory) {
             @Override
@@ -150,6 +162,7 @@ public class Home extends AppCompatActivity
             }
         };
         recycler_menu.setAdapter(adapter);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
