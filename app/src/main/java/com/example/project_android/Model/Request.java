@@ -10,8 +10,28 @@ public class Request {
     private List<Order> foods;
     private String comment;
     private String status;
+    private String paymentState;
 
     public Request() {
+    }
+
+    public String getPaymentState() {
+        return paymentState;
+    }
+
+    public void setPaymentState(String paymentState) {
+        this.paymentState = paymentState;
+    }
+
+    public Request(String phone, String name, String address, String total, List<Order> foods, String comment, String status, String paymentState) {
+        this.phone = phone;
+        this.name = name;
+        this.address = address;
+        this.total = total;
+        this.foods = foods;
+        this.comment = comment;
+        this.status = status;
+        this.paymentState = paymentState;
     }
 
     public Request(String phone, String name, String address, String total, List<Order> foods, String comment, String status) {
