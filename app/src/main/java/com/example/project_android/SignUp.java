@@ -38,12 +38,9 @@ public class SignUp extends AppCompatActivity {
         edtPhone = (EditText) findViewById(R.id.edtPhone);
         edtName = (EditText) findViewById(R.id.edtName);
         edtPass = (EditText) findViewById(R.id.edtPass);
-
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference table_user = database.getReference("User");
-
         btnSignUp.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -66,14 +63,9 @@ public class SignUp extends AppCompatActivity {
                                 Toast.makeText(SignUp.this, "Sign Up Success!", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
-
-
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-
-
                         }
                     });
                 }
@@ -82,9 +74,6 @@ public class SignUp extends AppCompatActivity {
                     Toast.makeText(SignUp.this, "Check Connection!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-
-
             }
         });
 

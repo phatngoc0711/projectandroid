@@ -57,7 +57,7 @@ public class Cart extends AppCompatActivity {
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter ;
     static PayPalConfiguration config = new PayPalConfiguration()
-            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK)
             .clientId(Config.PAYPAL_CLIENT_ID);
     String address, comment;
 
