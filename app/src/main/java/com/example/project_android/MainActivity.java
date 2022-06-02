@@ -26,9 +26,18 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnSignIn, btnSignUp;
     TextView slogan;
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+//                .setDefaultFontPath("fonts/CFOctobre-Regular.ttf")
+//                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
+//                .build());
         setContentView(R.layout.activity_main);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);

@@ -20,9 +20,18 @@ public class OrderStatus extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference requests;
 
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+//                .setDefaultFontPath("fonts/CFOctobre-Regular.ttf")
+//                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
+//                .build());
         setContentView(R.layout.activity_order_status);
 
         database = FirebaseDatabase.getInstance();

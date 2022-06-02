@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.project_android.Common.Common;
 import com.example.project_android.Database.Database;
@@ -36,10 +37,20 @@ public class FoodDetail extends AppCompatActivity {
     DatabaseReference foods;
 
     Food currentFood;
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+//                .setDefaultFontPath("fonts/CFOctobre-Regular.ttf")
+//                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
+//                .build());
+
         setContentView(R.layout.activity_food_detail);
 
         database = FirebaseDatabase.getInstance();

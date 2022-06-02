@@ -42,9 +42,21 @@ public class FoodList extends AppCompatActivity {
     FirebaseRecyclerAdapter<Food, FoodViewHolder> searchAdapter;
     List<String> suggestList = new ArrayList<>();
     MaterialSearchBar materialSearchBar;
+
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+//                .setDefaultFontPath("fonts/CFOctobre-Regular.ttf")
+//                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
+//                .build());
+
         setContentView(R.layout.activity_food_list);
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("Food");
@@ -171,6 +183,7 @@ public class FoodList extends AppCompatActivity {
             @Override
             protected void populateViewHolder(FoodViewHolder foodViewHolder, Food food, int i) {
                 foodViewHolder.food_name.setText(food.getName());
+                foodViewHolder.food_price.setText(String.format("$ %s", food.getPrice().toString()));
                 Picasso.with(getBaseContext()).load(food.getImage()).into(foodViewHolder.food_image);
 
                 final Food local =food;
