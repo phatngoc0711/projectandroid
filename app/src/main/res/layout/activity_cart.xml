@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
-            <Button
+            <info.hoang8f.widget.FButton
                 android:id="@+id/btnPlaceOrder"
                 android:text="Place Order"
                 android:layout_marginLeft="8dp"
@@ -56,9 +56,10 @@
                 app:shadowEnabled="true"
                 app:shadowHeight="5dp"
                 app:cornerRadius="4dp"
-                app:buttonColor="@color/btnSignActive"
+                app:fButtonColor="@color/btnSignActive"
                 />
         </RelativeLayout>
+        <!--                app:buttonColor="@color/btnSignActive"-->
 
     </androidx.cardview.widget.CardView>
 

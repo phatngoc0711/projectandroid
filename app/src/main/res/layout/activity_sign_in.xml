@@ -56,7 +56,7 @@
             />
 
     </LinearLayout>
-    <Button
+    <info.hoang8f.widget.FButton
         android:id="@+id/btnSignIn"
         android:text="Sign In"
         android:layout_marginLeft="8dp"
@@ -70,7 +70,7 @@
         app:shadowEnabled="true"
         app:shadowHeight="5dp"
         app:cornerRadius="4dp"
-        app:buttonColor="@color/btnSignActive"
+        app:fButtonColor="@color/btnSignActive"
         />
 
 
