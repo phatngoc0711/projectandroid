@@ -32,7 +32,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
@@ -43,6 +42,7 @@ dependencies {
     implementation files('C:\\Users\\phat0\\OneDrive\\Documents\\GitHub\\projectandroid\\app\\libs\\lib-1.0.2.aar')
     implementation files('C:\\Users\\phat0\\OneDrive\\Documents\\GitHub\\projectandroid\\app\\libs\\MaterialSearchBar-0.8.5.aar')
     implementation files('C:\\Users\\phat0\\OneDrive\\Documents\\GitHub\\projectandroid\\app\\libs\\android-flat-button-v1.1.aar')
+    implementation files('C:\\Users\\phat0\\OneDrive\\Documents\\GitHub\\projectandroid\\app\\libs\\spots-dialog-0.7.aar')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

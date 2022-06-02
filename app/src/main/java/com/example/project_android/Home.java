@@ -1,7 +1,9 @@
 package com.example.project_android;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -25,11 +28,19 @@ import com.example.project_android.Model.Category;
 import com.example.project_android.ViewHolder.MenuViewHolder;
 import com.example.project_android.databinding.ActivityHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
 
 public class Home extends AppCompatActivity
@@ -171,9 +182,72 @@ public class Home extends AppCompatActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
+        else if(id==R.id.nav_change_pwd){
+            showChangePasswordDialog();
+        }
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showChangePasswordDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
+        alertDialog.setTitle("Change Password");
+        alertDialog.setMessage("Fill all information");
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View layout_pwd = inflater.inflate(R.layout.change_password_layout,null);
+
+        MaterialEditText edtPassword = (MaterialEditText) layout_pwd.findViewById((R.id.edtPassword));
+        MaterialEditText edtNewPassword = (MaterialEditText) layout_pwd.findViewById((R.id.edtNewPassword));
+        MaterialEditText edtChangepassword = (MaterialEditText) layout_pwd.findViewById((R.id.edtRepeatPassword));
+
+        alertDialog.setView(layout_pwd);
+        alertDialog.setPositiveButton("CHANGE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                android.app.AlertDialog waitingDialog = new SpotsDialog(Home.this);
+//                waitingDialog.show();
+                if (edtPassword.getText().toString().equals(Common.currentUser.getPassword())){
+                    if (edtNewPassword.getText().toString().equals(edtChangepassword.getText().toString())) {
+                        Map<String, Object> passwordUpdate = new HashMap<>();
+                        passwordUpdate.put("Password", edtNewPassword.getText().toString());
+                        DatabaseReference user = FirebaseDatabase.getInstance().getReference("User");
+                        user.child(Common.currentUser.getPhone())
+                                .updateChildren(passwordUpdate)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        waitingDialog.dismiss();
+                                        Toast.makeText(Home.this, "Password updated", Toast.LENGTH_SHORT).show();
+                                        Common.currentUser.setPassword(edtNewPassword.getText().toString());
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(Home.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                    }
+                    else {
+                        waitingDialog.dismiss();
+                        Toast.makeText(Home.this, "New pass doesn't match", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Toast.makeText(Home.this, "Wrong old password", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 
     @Override

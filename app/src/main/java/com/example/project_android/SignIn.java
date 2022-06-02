@@ -55,7 +55,7 @@ public class SignIn extends AppCompatActivity {
                     progressDialog.setMessage("Please waiting....");
                     progressDialog.show();
 
-                    table_user.addValueEventListener(new ValueEventListener() {
+                    table_user.addListenerForSingleValueEvent(new ValueEventListener() {
 
 
                         @Override
@@ -73,6 +73,8 @@ public class SignIn extends AppCompatActivity {
                                     Common.currentUser = user;
                                     startActivity(intent);
                                     finish();
+
+                                    table_user.removeEventListener(this);
                                 } else {
                                     Toast.makeText(SignIn.this, "SignIn Fail!", Toast.LENGTH_SHORT).show();
                                 }
@@ -86,7 +88,6 @@ public class SignIn extends AppCompatActivity {
 
                         }
                     });
-
                 }
                 else
                 {
@@ -94,7 +95,6 @@ public class SignIn extends AppCompatActivity {
                     return;
                 }
             }
-
         });
 
     }
