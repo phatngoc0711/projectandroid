@@ -7,8 +7,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,12 +25,14 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.project_android.Common.Common;
 import com.example.project_android.Interface.ItemClickListener;
 import com.example.project_android.Model.Category;
 import com.example.project_android.ViewHolder.MenuViewHolder;
 import com.example.project_android.databinding.ActivityHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -63,12 +69,10 @@ public class Home extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 //        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
 //                .setDefaultFontPath("fonts/CFOctobre-Regular.ttf")
 //                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
 //                .build());
-
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -107,47 +111,17 @@ public class Home extends AppCompatActivity
                 }
             }
         });
-
         //initFireBase
         database= FirebaseDatabase.getInstance();
         cagatory=database.getReference("Category");
-        Paper.init(this);
 
-        binding.appBarHome.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Home.this, Cart.class);
-                startActivity(intent);
-            }
-        });
-        DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
-//        NavigationView navigationView= (NavigationView) findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setOpenableLayout(drawer)
+        FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>()
+                .setQuery(cagatory,Category.class)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
-        navigationView.setNavigationItemSelectedListener(this);
-        //setNameforUser
-        View headerView = navigationView.getHeaderView(0);
-        txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
-        txtFullName.setText(Common.currentUser.getName());
-//        txtFullName.setText("123");
-        recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
-        recycler_menu.setHasFixedSize(true);
-//        layoutManager = new LinearLayoutManager(this);
-//        recycler_menu.setLayoutManager(layoutManager);
-        recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
-    }
-    private void loadMenu() {
-        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class, R.layout.menu_item, MenuViewHolder.class,cagatory) {
+
+        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
             @Override
-            protected void populateViewHolder(MenuViewHolder menuViewHolder, Category category, int i) {
+            protected void onBindViewHolder(@NonNull MenuViewHolder menuViewHolder, int position, @NonNull Category category) {
                 menuViewHolder.txtMenuName.setText(category.getName());
                 Picasso.with(getBaseContext()).load(category.getImage()).into(menuViewHolder.imageView);
                 Category clickItem = category;
@@ -160,11 +134,110 @@ public class Home extends AppCompatActivity
                     }
                 });
             }
+            @NonNull
+            @Override
+            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.menu_item, parent, false);
+                return new MenuViewHolder(itemView);
+            }
         };
+
+        Paper.init(this);
+
+        binding.appBarHome.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Home.this, Cart.class);
+                startActivity(intent);
+            }
+        });
+
+        DrawerLayout drawer = binding.drawerLayout;
+        NavigationView navigationView = binding.navView;
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                .setOpenableLayout(drawer)
+                .build();
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //setNameforUser
+        View headerView = navigationView.getHeaderView(0);
+        txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
+        txtFullName.setText(Common.currentUser.getName());
+
+//        txtFullName.setText("123");
+
+        recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
+
+//        recycler_menu.setHasFixedSize(true);
+//        layoutManager = new LinearLayoutManager(this);
+//        recycler_menu.setLayoutManager(layoutManager);
+
+        recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recycler_menu.getContext(),R.anim.layout_fall_down);
+        recycler_menu.setLayoutAnimation(controller);
+    }
+    private void loadMenu() {
+//        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class, R.layout.menu_item, MenuViewHolder.class,cagatory) {
+//            @Override
+//            protected void populateViewHolder(MenuViewHolder menuViewHolder, Category category, int i) {
+//                menuViewHolder.txtMenuName.setText(category.getName());
+//                Picasso.with(getBaseContext()).load(category.getImage()).into(menuViewHolder.imageView);
+//                Category clickItem = category;
+//                menuViewHolder.setItemClickListener(new ItemClickListener() {
+//                    @Override
+//                    public void onClick(View view, int position, boolean isLongClick) {
+//                        Intent intent = new Intent(Home.this,FoodList.class);
+//                        intent.putExtra("CategoryId", adapter.getRef(position).getKey());
+//                        startActivity(intent);
+//                    }
+//                });
+//            }
+//        };
+//        FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>()
+//                .setQuery(cagatory,Category.class)
+//                .build();
+//
+//        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
+//            @Override
+//            protected void onBindViewHolder(@NonNull MenuViewHolder menuViewHolder, int i, @NonNull Category category) {
+//                menuViewHolder.txtMenuName.setText(category.getName());
+//                Picasso.with(getBaseContext()).load(category.getImage()).into(menuViewHolder.imageView);
+//                Category clickItem = category;
+//                menuViewHolder.setItemClickListener(new ItemClickListener() {
+//                    @Override
+//                    public void onClick(View view, int position, boolean isLongClick) {
+//                        Intent intent = new Intent(Home.this,FoodList.class);
+//                        intent.putExtra("CategoryId", adapter.getRef(position).getKey());
+//                        startActivity(intent);
+//                    }
+//                });
+//            }
+//            @NonNull
+//            @Override
+//            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//                View itemView = LayoutInflater.from(parent.getContext())
+//                        .inflate(R.layout.menu_item, parent, false);
+//                return new MenuViewHolder(itemView);
+//            }
+//        };
+
+        adapter.startListening();
         recycler_menu.setAdapter(adapter);
         swipeRefreshLayout.setRefreshing(false);
+        recycler_menu.getAdapter().notifyDataSetChanged();
+        recycler_menu.scheduleLayoutAnimation();
     }
-
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        adapter.stopListening();
+//    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer= (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -174,14 +247,12 @@ public class Home extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.refresh){
@@ -189,7 +260,6 @@ public class Home extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
@@ -220,19 +290,15 @@ public class Home extends AppCompatActivity
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-
     private void showChangePasswordDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
         alertDialog.setTitle("Change Password");
         alertDialog.setMessage("Fill all information");
-
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout_pwd = inflater.inflate(R.layout.change_password_layout,null);
-
         MaterialEditText edtPassword = (MaterialEditText) layout_pwd.findViewById((R.id.edtPassword));
         MaterialEditText edtNewPassword = (MaterialEditText) layout_pwd.findViewById((R.id.edtNewPassword));
         MaterialEditText edtChangepassword = (MaterialEditText) layout_pwd.findViewById((R.id.edtRepeatPassword));
-
         alertDialog.setView(layout_pwd);
         alertDialog.setPositiveButton("CHANGE", new DialogInterface.OnClickListener() {
             @Override

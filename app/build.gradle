@@ -61,7 +61,10 @@ dependencies {
     implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-
+    implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.firebaseui:firebase-ui-database:8.0.1'
+    implementation 'com.google.firebase:firebase-messaging:23.0.5'
 
 //    implementation 'com.github.jd-alexander:android-flat-button:v1.1'
 
