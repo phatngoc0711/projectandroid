@@ -67,7 +67,15 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:23.0.5'
 
 //    implementation 'com.github.jd-alexander:android-flat-button:v1.1'
-
+/*
+    implementation files('D:\\ute\\mobile-programming\\final\\projectandroid\\app\\libs\\lib-1.0.2.aar')
+    implementation files('D:\\ute\\mobile-programming\\final\\projectandroid\\app\\libs\\MaterialSearchBar-0.8.5.aar')
+    implementation files('D:\\ute\\mobile-programming\\final\\projectandroid\\app\\libs\\android-flat-button-v1.1.aar')
+    implementation files('D:\\ute\\mobile-programming\\final\\projectandroid\\app\\libs\\spots-dialog-0.7.aar')
+*/
+    implementation 'com.google.firebase:firebase-messaging:23.0.5'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
 }
 apply plugin: 'com.google.gms.google-services'
