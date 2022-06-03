@@ -29,6 +29,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.project_android.Common.Common;
 import com.example.project_android.Interface.ItemClickListener;
 import com.example.project_android.Model.Category;
+import com.example.project_android.Model.Token;
 import com.example.project_android.ViewHolder.MenuViewHolder;
 import com.example.project_android.databinding.ActivityHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -39,11 +40,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
@@ -181,6 +184,24 @@ public class Home extends AppCompatActivity
         recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
         LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recycler_menu.getContext(),R.anim.layout_fall_down);
         recycler_menu.setLayoutAnimation(controller);
+
+        //video 22
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        //Could not get FirebaseMessagingToken
+                        return;
+                    }
+                    if (null != task.getResult()) {
+                        //Got FirebaseMessagingToken
+                        String firebaseMessagingToken = Objects.requireNonNull(task.getResult());
+                        //Use firebaseMessagingToken further
+                        FirebaseDatabase db = FirebaseDatabase.getInstance();
+                        DatabaseReference tokens = db.getReference("Tokens");
+                        Token data = new Token(firebaseMessagingToken, false);
+                        tokens.child(Common.currentUser.getPhone()).setValue(data);
+                    }
+                });
     }
     private void loadMenu() {
 //        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class, R.layout.menu_item, MenuViewHolder.class,cagatory) {
