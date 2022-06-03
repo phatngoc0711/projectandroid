@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,11 +23,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.project_android.Common.Common;
 import com.example.project_android.Common.Config;
 import com.example.project_android.Database.Database;
+import com.example.project_android.Model.MyResponse;
+import com.example.project_android.Model.Notification;
 import com.example.project_android.Model.Order;
 import com.example.project_android.Model.Request;
+import com.example.project_android.Model.Sender;
+import com.example.project_android.Model.Token;
+import com.example.project_android.Remote.APIService;
 import com.example.project_android.ViewHolder.CartAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -42,6 +52,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Cart extends AppCompatActivity {
     private static final int PAYPAL_REQUEST_CODE = 9999;
@@ -60,7 +74,7 @@ public class Cart extends AppCompatActivity {
             .environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK)
             .clientId(Config.PAYPAL_CLIENT_ID);
     String address, comment;
-
+    APIService mService;
 
 //    @Override
 //    protected void attachBaseContext(Context newBase) {
@@ -82,7 +96,8 @@ public class Cart extends AppCompatActivity {
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
         startService(intent);
         System.out.println(config);
-
+        //init service
+        mService = Common.getFCMClient();
         database = FirebaseDatabase.getInstance();
         requests = database.getReference("Requests");
         recyclerView = (RecyclerView) findViewById(R.id.listCart);
@@ -200,11 +215,12 @@ public class Cart extends AppCompatActivity {
                                 "0",
                                 jsonObject.getJSONObject("response").getString("state")
                         );
-                        requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+                        String order_number = String.valueOf(System.currentTimeMillis());
+                        requests.child(order_number).setValue(request);
 
                         new Database(getBaseContext()).cleanCart();
-                        Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
-                        finish();
+                        sendNotificationOrder(order_number);
+
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -286,5 +302,45 @@ public class Cart extends AppCompatActivity {
         loadListFood();
 
     }
+    private void sendNotificationOrder(String order_number){
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query data = tokens.orderByChild("isServerToken").equalTo(true);
+        data.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapShot : snapshot.getChildren()) {
+                    Token tokens = postSnapShot.getValue(Token.class);
 
+                    Notification notification = new Notification("RESTAURANT", "You have new order " + order_number);
+                    Sender content = new Sender(tokens.getToken(), notification);
+
+                    mService.sendNotification(content)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if (response.code() == 200) {
+                                        if (response.body().success == 1) {
+                                            Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        } else {
+                                            Toast.makeText(Cart.this, "Failed !!!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+                                    Log.e("ERROR", t.getMessage());
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }
