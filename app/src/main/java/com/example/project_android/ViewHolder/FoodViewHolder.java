@@ -15,7 +15,7 @@ public class FoodViewHolder  extends RecyclerView.ViewHolder
 
     public TextView food_name;
     public TextView food_price;
-    public ImageView food_image;
+    public ImageView food_image, quick_cart;
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
@@ -28,6 +28,7 @@ public class FoodViewHolder  extends RecyclerView.ViewHolder
         food_name = (TextView) itemView.findViewById(R.id.food_name);
         food_image = (ImageView) itemView.findViewById(R.id.food_image);
         food_price = (TextView) itemView.findViewById(R.id.food_price);
+        quick_cart = (ImageView)itemView.findViewById(R.id.btn_quickcart);
         itemView.setOnClickListener(this);
 
     }

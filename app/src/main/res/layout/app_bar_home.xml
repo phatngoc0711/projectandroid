@@ -22,9 +22,12 @@
 
     <include layout="@layout/content_home" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.andremion.counterfab.CounterFab
         android:id="@+id/fab"
+        app:badgeBackgroundColor="@color/colorPrimary"
+        app:badgeTextColor="@color/white"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"

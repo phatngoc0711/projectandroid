@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.project_android.Common.Common;
+import com.example.project_android.Database.Database;
 import com.example.project_android.Interface.ItemClickListener;
 import com.example.project_android.Model.Category;
 import com.example.project_android.Model.Token;
@@ -63,11 +64,6 @@ public class Home extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager;
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
     SwipeRefreshLayout swipeRefreshLayout;
-
-//    @Override
-//    protected void attachBaseContext(Context newBase) {
-//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +151,7 @@ public class Home extends AppCompatActivity
                 startActivity(intent);
             }
         });
+        binding.appBarHome.fab.setCount(new Database(this).getCountCart());
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
@@ -173,13 +170,8 @@ public class Home extends AppCompatActivity
         txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
         txtFullName.setText(Common.currentUser.getName());
 
-//        txtFullName.setText("123");
-
         recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
 
-//        recycler_menu.setHasFixedSize(true);
-//        layoutManager = new LinearLayoutManager(this);
-//        recycler_menu.setLayoutManager(layoutManager);
 
         recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
         LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recycler_menu.getContext(),R.anim.layout_fall_down);
@@ -203,62 +195,21 @@ public class Home extends AppCompatActivity
                     }
                 });
     }
-    private void loadMenu() {
-//        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class, R.layout.menu_item, MenuViewHolder.class,cagatory) {
-//            @Override
-//            protected void populateViewHolder(MenuViewHolder menuViewHolder, Category category, int i) {
-//                menuViewHolder.txtMenuName.setText(category.getName());
-//                Picasso.with(getBaseContext()).load(category.getImage()).into(menuViewHolder.imageView);
-//                Category clickItem = category;
-//                menuViewHolder.setItemClickListener(new ItemClickListener() {
-//                    @Override
-//                    public void onClick(View view, int position, boolean isLongClick) {
-//                        Intent intent = new Intent(Home.this,FoodList.class);
-//                        intent.putExtra("CategoryId", adapter.getRef(position).getKey());
-//                        startActivity(intent);
-//                    }
-//                });
-//            }
-//        };
-//        FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>()
-//                .setQuery(cagatory,Category.class)
-//                .build();
-//
-//        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
-//            @Override
-//            protected void onBindViewHolder(@NonNull MenuViewHolder menuViewHolder, int i, @NonNull Category category) {
-//                menuViewHolder.txtMenuName.setText(category.getName());
-//                Picasso.with(getBaseContext()).load(category.getImage()).into(menuViewHolder.imageView);
-//                Category clickItem = category;
-//                menuViewHolder.setItemClickListener(new ItemClickListener() {
-//                    @Override
-//                    public void onClick(View view, int position, boolean isLongClick) {
-//                        Intent intent = new Intent(Home.this,FoodList.class);
-//                        intent.putExtra("CategoryId", adapter.getRef(position).getKey());
-//                        startActivity(intent);
-//                    }
-//                });
-//            }
-//            @NonNull
-//            @Override
-//            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View itemView = LayoutInflater.from(parent.getContext())
-//                        .inflate(R.layout.menu_item, parent, false);
-//                return new MenuViewHolder(itemView);
-//            }
-//        };
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        binding.appBarHome.fab.setCount(new Database(this).getCountCart());
+    }
+
+    private void loadMenu() {
         adapter.startListening();
         recycler_menu.setAdapter(adapter);
         swipeRefreshLayout.setRefreshing(false);
         recycler_menu.getAdapter().notifyDataSetChanged();
         recycler_menu.scheduleLayoutAnimation();
     }
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        adapter.stopListening();
-//    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer= (DrawerLayout) findViewById(R.id.drawer_layout);

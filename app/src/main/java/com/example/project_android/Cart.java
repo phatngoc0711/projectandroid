@@ -161,26 +161,6 @@ public class Cart extends AppCompatActivity {
                 intent.putExtra(PaymentActivity.EXTRA_PAYMENT,payPalPayment);
                 startActivityForResult(intent,PAYPAL_REQUEST_CODE);
 
-                /*
-
-                Request request = new Request(
-                        Common.currentUser.getPhone(),
-                        Common.currentUser.getName(),
-                        edtAddress.getText().toString(),
-                        txtTotalPrice.getText().toString(),
-                        cart,
-                        edtComment.getText().toString(),
-                        "0"
-                );
-                requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
-
-                new Database(getBaseContext()).cleanCart();
-                Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
-                finish();
-
-                 */
-
-
             }
         });
 
@@ -233,44 +213,6 @@ public class Cart extends AppCompatActivity {
                 Toast.makeText(this,"Invalid payment", Toast.LENGTH_SHORT).show();
         }
     }
-    //    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == PAYPAL_REQUEST_CODE) {
-//            if (resultCode == RESULT_OK) {
-//                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-//                if (confirmation != null) {
-//                    try {
-//                        String paymentDetail = confirmation.toJSONObject().toString(4);
-//                        JSONObject jsonObject = new JSONObject(paymentDetail);
-//
-//                        Request request = new Request(
-//                                Common.currentUser.getPhone(),
-//                                Common.currentUser.getName(),
-//                                address,
-//                                txtTotalPrice.getText().toString(),
-//                                cart,
-//                                comment,
-//                                "0",
-//                                jsonObject.getJSONObject("response").getString("state")
-//                        );
-//                        requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
-//
-//                        new Database(getBaseContext()).cleanCart();
-//                        Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
-//                        finish();
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//            else if (resultCode == Activity.RESULT_CANCELED)
-//                Toast.makeText(this, "Payment cancel", Toast.LENGTH_SHORT).show();
-//            else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID)
-//                Toast.makeText(this,"Invalid payment", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private void loadListFood() {
         cart = new Database(this).getCarts();

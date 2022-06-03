@@ -1,5 +1,6 @@
 package com.example.project_android;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,8 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.project_android.Common.Common;
+import com.example.project_android.Database.Database;
 import com.example.project_android.Interface.ItemClickListener;
 import com.example.project_android.Model.Food;
+import com.example.project_android.Model.Order;
 import com.example.project_android.ViewHolder.FoodViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -49,19 +52,9 @@ public class FoodList extends AppCompatActivity {
     MaterialSearchBar materialSearchBar;
     SwipeRefreshLayout swipeRefreshLayout;
 
-//    @Override
-//    protected void attachBaseContext(Context newBase) {
-//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/CFOctobre-Regular.ttf")
-//                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
-//                .build());
 
         setContentView(R.layout.activity_food_list);
         database = FirebaseDatabase.getInstance();
@@ -166,30 +159,6 @@ public class FoodList extends AppCompatActivity {
     }
 
     private void startSearch(CharSequence charSequence) {
-//        searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(
-//                Food.class,
-//                R.layout.food_item,
-//                FoodViewHolder.class,
-//                foodList.orderByChild("name").equalTo(charSequence.toString())
-//        ) {
-//            @Override
-//            protected void populateViewHolder(FoodViewHolder foodViewHolder, Food food, int i) {
-//                foodViewHolder.food_name.setText(food.getName());
-//                Picasso.with(getBaseContext()).load(food.getImage()).into(foodViewHolder.food_image);
-//
-//                final Food local =food;
-//                foodViewHolder.setItemClickListener(new ItemClickListener() {
-//                    @Override
-//                    public void onClick(View view, int position, boolean isLongClick) {
-//                        Toast.makeText(FoodList.this, "" + local.getName(), Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(FoodList.this,FoodDetail.class);
-//                        intent.putExtra("FoodId",searchAdapter.getRef(position).getKey());
-//                        startActivity(intent);
-//                    }
-//                });
-//
-//            }
-//        };
         Query searchByName = foodList.orderByChild("name").equalTo(charSequence.toString());
         FirebaseRecyclerOptions<Food> options = new FirebaseRecyclerOptions.Builder<Food>()
                 .setQuery(searchByName, Food.class)
@@ -244,41 +213,30 @@ public class FoodList extends AppCompatActivity {
     }
 
     private void loadListFood(String categoryId) {
-//        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class,
-//                R.layout.food_item,
-//                FoodViewHolder.class,
-//                foodList.orderByChild("menuId").equalTo(CategoryId)
-//                ) {
-//            @Override
-//            protected void populateViewHolder(FoodViewHolder foodViewHolder, Food food, int i) {
-//                foodViewHolder.food_name.setText(food.getName());
-//                foodViewHolder.food_price.setText(String.format("$ %s", food.getPrice().toString()));
-//                Picasso.with(getBaseContext()).load(food.getImage()).into(foodViewHolder.food_image);
-//
-//                final Food local =food;
-//                foodViewHolder.setItemClickListener(new ItemClickListener() {
-//                    @Override
-//                    public void onClick(View view, int position, boolean isLongClick) {
-//                        Toast.makeText(FoodList.this, "" + local.getName(), Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(FoodList.this,FoodDetail.class);
-//                        intent.putExtra("FoodId",adapter.getRef(position).getKey());
-//                        startActivity(intent);
-//                    }
-//                });
-//
-//            }
-//        };
-
         Query searchByName = foodList.orderByChild("menuId").equalTo(categoryId);
         FirebaseRecyclerOptions<Food> options = new FirebaseRecyclerOptions.Builder<Food>()
                 .setQuery(searchByName, Food.class)
                 .build();
         adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull FoodViewHolder foodViewHolder, int position, @NonNull Food food) {
+            protected void onBindViewHolder(@NonNull FoodViewHolder foodViewHolder, @SuppressLint("RecyclerView") int position, @NonNull Food food) {
                 foodViewHolder.food_name.setText(food.getName());
                 foodViewHolder.food_price.setText(String.format("$ %s", food.getPrice().toString()));
                 Picasso.with(getBaseContext()).load(food.getImage()).into(foodViewHolder.food_image);
+
+                foodViewHolder.quick_cart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new Database(getBaseContext()).addToCart(new Order(
+                                adapter.getRef(position).getKey(),
+                                food.getName(),
+                                "1",
+                                food.getPrice(),
+                                food.getDiscount()
+                        ));
+                        Toast.makeText(FoodList.this, "Add to Cart",Toast.LENGTH_SHORT).show();
+                    }
+                });
 
                 final Food local =food;
                 foodViewHolder.setItemClickListener(new ItemClickListener() {
@@ -305,11 +263,4 @@ public class FoodList extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setRefreshing(false);
     }
-
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        adapter.stopListening();
-////        searchAdapter.stopListening();
-//    }
 }

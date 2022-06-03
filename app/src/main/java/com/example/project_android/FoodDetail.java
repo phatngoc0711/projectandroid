@@ -9,13 +9,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.project_android.Common.Common;
 import com.example.project_android.Database.Database;
 import com.example.project_android.Model.Food;
 import com.example.project_android.Model.Order;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +28,8 @@ public class FoodDetail extends AppCompatActivity {
     TextView food_name, food_price, food_description;
     ImageView food_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
-    FloatingActionButton btn_Cart;
+//    FloatingActionButton btn_Cart;
+    CounterFab btn_Cart;
     ElegantNumberButton numberButton;
 
     String food_Id="";
@@ -57,7 +58,7 @@ public class FoodDetail extends AppCompatActivity {
         foods = database.getReference("Food");
 
         numberButton = (ElegantNumberButton) findViewById(R.id.number_button);
-        btn_Cart = (FloatingActionButton) findViewById(R.id.btnCart);
+        btn_Cart = (CounterFab) findViewById(R.id.btnCart);
         btn_Cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,7 +72,7 @@ public class FoodDetail extends AppCompatActivity {
                 Toast.makeText(FoodDetail.this, "Add to Cart",Toast.LENGTH_SHORT).show();
             }
         });
-
+        btn_Cart.setCount(new Database(this).getCountCart());
         food_description = (TextView) findViewById(R.id.food_description);
         food_name = (TextView) findViewById(R.id.food_name);
         food_price = (TextView) findViewById(R.id.food_price);
