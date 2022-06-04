@@ -13,14 +13,11 @@
         android:layout_height="match_parent">
         
         <ImageView
-            app:cardCornerRadius="10dp"
             android:id="@+id/menu_image"
             android:scaleType="centerCrop"
             android:src="@drawable/foodapp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
-
     </RelativeLayout>
     <TextView
         android:id="@+id/menu_name"
