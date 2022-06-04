@@ -68,10 +68,7 @@ public class Home extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/CFOctobre-Regular.ttf")
-//                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
-//                .build());
+
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -171,8 +168,6 @@ public class Home extends AppCompatActivity
         txtFullName.setText(Common.currentUser.getName());
 
         recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
-
-
         recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
         LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recycler_menu.getContext(),R.anim.layout_fall_down);
         recycler_menu.setLayoutAnimation(controller);

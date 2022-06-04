@@ -22,17 +22,11 @@ public class SignUp extends AppCompatActivity {
     EditText edtPhone, edtName, edtPass;
     Button btnSignUp;
 
-//    @Override
-//    protected void attachBaseContext(Context newBase) {
-//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/CFOctobre-Regular.ttf")
-//                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
-//                .build());
+
         setContentView(R.layout.activity_sign_up);
 
         edtPhone = (EditText) findViewById(R.id.edtPhone);

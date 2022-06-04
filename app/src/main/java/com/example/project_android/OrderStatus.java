@@ -26,18 +26,10 @@ public class OrderStatus extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference requests;
 
-//    @Override
-//    protected void attachBaseContext(Context newBase) {
-//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/CFOctobre-Regular.ttf")
-//                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
-//                .build());
+
         setContentView(R.layout.activity_order_status);
 
         database = FirebaseDatabase.getInstance();
@@ -52,20 +44,6 @@ public class OrderStatus extends AppCompatActivity {
     }
 
     private void loadOrders(String phone) {
-//        adapter = new FirebaseRecyclerAdapter<Request, OrderViewHolder>(
-//                Request.class,
-//                R.layout.order_layout,
-//                OrderViewHolder.class,
-//                requests.orderByChild("phone").equalTo(phone)
-//        ) {
-//            @Override
-//            protected void populateViewHolder(OrderViewHolder orderViewHolder, Request request, int i) {
-//                orderViewHolder.txtOrderId.setText(adapter.getRef(i).getKey());
-//                orderViewHolder.txtOrderStatus.setText(convertCodeToStatus(request.getStatus()));
-//                orderViewHolder.txtOrderAddress.setText(request.getAddress());
-//                orderViewHolder.txtOrderPhone.setText(request.getPhone());
-//            }
-//        };
         Query getOrder = requests.orderByChild("phone")
                 .equalTo(phone);
         FirebaseRecyclerOptions<Request> options = new FirebaseRecyclerOptions.Builder<Request>()
@@ -84,7 +62,7 @@ public class OrderStatus extends AppCompatActivity {
             @Override
             public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.food_item, parent, false);
+                        .inflate(R.layout.order_layout, parent, false);
                 return new OrderViewHolder(itemView);
             }
         };

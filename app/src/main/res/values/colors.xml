@@ -12,8 +12,8 @@
     <color name="colorAccent">#39796b</color>
 
     <color name="btnSignUp">#39796b</color>
-    <color name="btnSignInUp">#db5a6b</color>
-    <color name="btnSignActive">#A9d440</color>
+    <color name="btnSignInUp">#2699A7</color>
+    <color name="btnSignActive">#db5a6b</color>
 
     <color name="overlayBackground">#757575</color>
     <color name="overlayActionBar">#0e0d0e</color>

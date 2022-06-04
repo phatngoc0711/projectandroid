@@ -48,10 +48,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,7 +63,7 @@ public class Cart extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference requests;
 
-    TextView txtTotalPrice;
+    public TextView txtTotalPrice;
     Button btnPlace;
 
     List<Order> cart = new ArrayList<>();
@@ -76,19 +74,9 @@ public class Cart extends AppCompatActivity {
     String address, comment;
     APIService mService;
 
-//    @Override
-//    protected void attachBaseContext(Context newBase) {
-//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/CFOctobre-Regular.ttf")
-//                .setFontAttrId(uk.co.chrisjenx.calligraphy.R.attr.fontPath)
-//                .build());
 
         setContentView(R.layout.activity_cart);
 
@@ -125,14 +113,6 @@ public class Cart extends AppCompatActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("One more step");
         alertDialog.setMessage("Enter your Address: ");
-
-//        final EditText edtAddress = new EditText(Cart.this);
-////        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-////                LinearLayout.LayoutParams.MATCH_PARENT,
-////                LinearLayout.LayoutParams.MATCH_PARENT
-////        );
-////        edtAddress.setLayoutParams(lp);
-////        alertDialog.setView(edtAddress);
 
         LayoutInflater inflater  = this.getLayoutInflater();
         View order_address_comment = inflater.inflate(R.layout.order_address_comment,null);
@@ -219,12 +199,7 @@ public class Cart extends AppCompatActivity {
         adapter = new CartAdapter(cart,this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
-        int total = 0 ;
-        for(Order order : cart)
-            total+= (Integer.parseInt(order.getPrice()))*(Integer.parseInt(order.getQuantity()));
-        Locale locale = new Locale("en","US");
-        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-        txtTotalPrice.setText(fmt.format(total));
+
     }
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
