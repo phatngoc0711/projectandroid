@@ -50,9 +50,9 @@
             style="@style/Material.Drawable.CheckBox"
             android:gravity="center_vertical"
             android:text="Remember me"
-            android:textColor="@android:color/white"
-            app:cbd_strokeColor="@android:color/white"
-            app:cbd_tickColor="@color/colorPrimaryDark"
+            android:textColor="@android:color/black"
+            app:cbd_strokeColor="@android:color/black"
+            app:cbd_tickColor="@color/white"
             />
 
     </LinearLayout>

@@ -13,22 +13,25 @@
         android:layout_height="match_parent">
         
         <ImageView
+            app:cardCornerRadius="10dp"
             android:id="@+id/menu_image"
             android:scaleType="centerCrop"
             android:src="@drawable/foodapp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <TextView
-            android:id="@+id/menu_name"
-            android:text="Name of Menu"
-            android:textColor="@android:color/white"
-            android:background="#4f0e0d0e"
-            android:textSize="20sp"
-            android:gravity="center"
-            android:layout_centerInParent="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+
     </RelativeLayout>
+    <TextView
+        android:id="@+id/menu_name"
+        android:text="Name of Menu"
+        android:textColor="#ff008d"
+        android:background="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </androidx.cardview.widget.CardView>
