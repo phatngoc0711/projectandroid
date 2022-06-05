@@ -175,6 +175,7 @@ public class Cart extends AppCompatActivity {
                                 "0",
                                 jsonObject.getJSONObject("response").getString("state")
                         );
+
                         String order_number = String.valueOf(System.currentTimeMillis());
                         requests.child(order_number).setValue(request);
 

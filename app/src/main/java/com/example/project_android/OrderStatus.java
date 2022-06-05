@@ -70,11 +70,7 @@ public class OrderStatus extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        adapter.stopListening();
-    }
+
 
     private String convertCodeToStatus(String status) {
         if (status.equals("0"))

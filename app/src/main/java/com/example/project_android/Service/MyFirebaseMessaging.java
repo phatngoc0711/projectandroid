@@ -23,6 +23,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService{
     }
 
     private void sendNotification(RemoteMessage remoteMessage) {
+
+
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
